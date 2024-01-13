@@ -1,0 +1,48 @@
+Q2. Enter the editor and key in the following program. And explain the meanings of each statement.
+Ans:
+// Program Area calculates the area of a square.
+// The user is prompted to enter the number of inches on each
+// side. Note that "endl" in line 7 ends in the letter "l", not
+// the number one.
+#include <iostream>
+using namespace std;
+int main () {
+    int inches;
+    
+    // Prompt the user to enter the number of inches on a side
+    cout << "Enter the number of inches on a side "
+         << endl;
+
+    // Prompt the user to press the return key
+    cout << "Press the return key."
+         << endl;
+
+    // Read the user input (inches) from the standard input (keyboard)
+    cin >> inches;
+
+    // Display the calculated area
+    cout << endl
+         << "The area is " << inches * inches << "."
+         << endl;
+
+    // Return 0 to indicate successful completion of the program
+    return 0;
+}
+
+Explanation of the statements:
+
+#include <iostream>: This line includes the input/output stream library, which is necessary for input and output operations using cin and cout.
+
+using namespace std;: This line declares that the program is using the std namespace. The std namespace includes the standard C++ library components.
+
+int main () { ... }: This is the main function, where the execution of the program begins. It declares a variable inches to store the user input.
+
+cout << "Enter the number of inches on a side " << endl;: This line outputs a prompt to the console, asking the user to enter the number of inches on a side.
+
+cout << "Press the return key." << endl;: This line outputs a prompt to the console, asking the user to press the return key.
+
+cin >> inches;: This line reads the user input (the number of inches) from the standard input (keyboard) and stores it in the variable inches.
+
+cout << endl << "The area is " << inches * inches << "." << endl;: This line calculates the area of the square (side length squared) and outputs the result along with a message to the console.
+
+return 0;: This line indicates that the program has completed successfully and returns 0 to the operating system. The value 0 conventionally represents successful execution.
