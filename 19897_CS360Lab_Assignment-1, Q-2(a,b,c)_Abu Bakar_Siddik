@@ -1,0 +1,37 @@
+// Program Shell for Question #1
+#include <iostream>
+using namespace std;
+
+int main() {
+    // Your code for Question #1 goes here
+    cout << "Doe, John" << endl;
+    cout << "02:13:2024" << endl;
+
+    return 0;
+}
+
+
+// Program Shell for Question #2
+#include <iostream>
+using namespace std;
+
+int main() {
+    // Your code for Question #2 goes here
+    cout << "Doe, John" << endl << endl;
+    cout << "02:13:2024" << endl; // Add an extra endl for a space between lines
+
+    return 0;
+}
+
+
+// Program Shell for Question #3
+#include <iostream>
+using namespace std;
+
+int main() {
+    // Your code for Question #3 goes here
+    cout << "John Doe" << endl;
+    cout << "02:13:2024" << endl;
+
+    return 0;
+}
