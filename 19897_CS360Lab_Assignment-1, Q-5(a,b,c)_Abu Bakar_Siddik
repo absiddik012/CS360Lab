@@ -1,0 +1,43 @@
+//(a) 
+// Program Center sends strings to the output stream in specified formats.
+#include <iostream>
+#include <iomanip>
+using std::cout;
+
+int main() {
+    
+    cout << std::setw(20) << "Good Morning" << std::setw(20) << "Sarah" << std::setw(20) << "Sunshine!" << std::endl;
+
+    return 0;
+} 
+
+
+
+//(b)
+// Program Center sends strings to the output stream in specified formats.
+#include <iostream>
+#include <iomanip>
+using std::cout;
+
+int main() {
+    cout << std::setw(20) << std::right << "Good Morning";
+    cout << std::setw(20) << std::right << "Sarah";
+    cout << std::setw(20) << std::right << "Sunshine!" << std::endl;
+
+    return 0;
+}
+
+
+//(c)
+// Program Center sends strings to the output stream in specified formats.
+#include <iostream>
+#include <iomanip>
+using std::cout;
+
+int main() {
+    cout << std::setw(20) << std::left << "Good Morning" << std::endl<< std::endl;
+    cout << std::setw(20) << std::left << "Sarah" << std::endl << std::endl;
+    cout << std::setw(20) << std::left << "Sunshine!" << std::endl << std::endl;
+
+    return 0;
+}
