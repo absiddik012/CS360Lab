@@ -1,0 +1,37 @@
+// (a) Program Strings applies string functions.
+#include <iostream>
+using std::cout, std::string;
+
+int main(void) {
+    // Your code for Question #1 goes here
+    const string fullName = "Doe John";
+    cout << "Length: " << fullName.length() << std::endl;
+    cout << "Size: " << fullName.size() << std::endl;
+
+    return 0;
+}
+
+
+
+//(b) 
+
+#include <iostream>
+using std::cout, std::string;
+int main() {
+    const string fullName = "Doe John";
+    cout << fullName.substr(fullName.find(' ') + 1) << ", " << fullName.substr(0, fullName.find(' ')) << std::endl;
+    return 0;
+}
+
+
+//(c)
+#include <iostream>
+using std::cout, std::string;
+
+int main() {
+    const string fullName = "Doe John";
+    cout << fullName.substr(0, fullName.find(' ')) << ", " << fullName[fullName.find(' ') + 1] << "." << std::endl;
+
+    return 0;
+}
+
