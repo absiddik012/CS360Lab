@@ -1,0 +1,99 @@
+#include <iostream>
+#include <cmath>
+#include <sstream>
+
+class Complex {
+private:
+    double real;
+    double imag;
+
+public:
+    Complex() : real(0), imag(0) {} //This is the public constructor
+
+    Complex(double r, double i) : real(r), imag(i) {}
+
+    Complex(const std::string& complexStr) {
+        if (!complexStr.empty()) {
+            std::stringstream ss(complexStr);
+            char delimiter;
+            ss >> real >> std::ws >> delimiter >> std::ws >> imag;
+        } else {
+            real = 0;
+            imag = 0;
+        }
+    }
+
+    double magnitude() const {
+        return sqrt(real * real + imag * imag);
+    }
+
+    double angle() const {
+        return atan2(imag, real) * (180.0 / M_PI);
+    }
+
+    Complex conjugate() const {
+        return Complex(real, -imag);
+    }
+
+    void print() const {
+        std::cout << "(" << real << ", " << imag << ")";
+    }
+
+    Complex operator+(const Complex& other) const {
+        return Complex(real + other.real, imag + other.imag);
+    }
+
+    Complex operator-(const Complex& other) const {
+        return Complex(real - other.real, imag - other.imag);
+    }
+
+    Complex operator*(const Complex& other) const {
+        return Complex((real * other.real) - (imag * other.imag),
+                       (real * other.imag) + (imag * other.real));
+    }
+
+    Complex operator/(const Complex& other) const {
+        double denominator = other.real * other.real + other.imag * other.imag;
+        return Complex(((real * other.real) + (imag * other.imag)) / denominator,
+                       ((imag * other.real) - (real * other.imag)) / denominator);
+    }
+};
+
+int main() {
+    Complex a(1, 2);
+    Complex b("3, 4");
+
+    std::cout << "Complex a = ";
+    a.print();
+    std::cout << std::endl;
+
+    std::cout << "Complex b = ";
+    b.print();
+    std::cout << std::endl;
+
+    // Addition
+    Complex result_add = a + b;
+    std::cout << "Addition: ";
+    result_add.print();
+    std::cout << std::endl;
+
+    // Subtraction
+    Complex result_sub = a - b;
+    std::cout << "Subtraction: ";
+    result_sub.print();
+    std::cout << std::endl;
+
+    // Multiplication
+    Complex result_mul = a * b;
+    std::cout << "Multiplication: ";
+    result_mul.print();
+    std::cout << std::endl;
+
+    // Division
+    Complex result_div = a / b;
+    std::cout << "Division: ";
+    result_div.print();
+    std::cout << std::endl;
+
+    return 0;
+}
