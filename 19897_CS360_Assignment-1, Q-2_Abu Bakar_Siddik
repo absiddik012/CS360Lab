@@ -1,0 +1,156 @@
+#include <iostream>
+#include <vector>
+#include <sstream>
+
+class Matrix {
+private:
+    std::vector<std::vector<int>> matrix;
+    int rows;
+    int cols;
+    bool not_a_matrix;
+
+public:
+    Matrix(std::string matrix_str);
+
+    void parseMatrix(std::string matrix_str);
+    bool checkCompatibility(const Matrix& otherMatrix);
+    Matrix add(const Matrix& otherMatrix);
+    Matrix subtract(const Matrix& otherMatrix);
+    Matrix multiply(const Matrix& otherMatrix);
+    std::string matrixToString() const;
+
+    void display() const;
+};
+
+Matrix::Matrix(std::string matrix_str) {
+    parseMatrix(matrix_str);
+    not_a_matrix = false;
+}
+
+void Matrix::parseMatrix(std::string matrix_str) {
+    matrix.clear();
+    std::istringstream iss(matrix_str);
+
+    char c;
+    int num;
+
+    while (iss >> c >> num) {
+        std::vector<int> row;
+        row.push_back(num);
+
+        while (iss.peek() == ',' || iss.peek() == ' ') {
+            iss.ignore();
+            iss >> num;
+            row.push_back(num);
+        }
+
+        matrix.push_back(row);
+
+        iss.ignore();
+        iss.ignore();
+    }
+
+    rows = matrix.size();
+    cols = (rows > 0) ? matrix[0].size() : 0;
+}
+
+bool Matrix::checkCompatibility(const Matrix& otherMatrix) {
+    return (cols == otherMatrix.cols) && (rows == otherMatrix.rows);
+}
+
+Matrix Matrix::add(const Matrix& otherMatrix) {
+    if (!checkCompatibility(otherMatrix)) {
+        not_a_matrix = true;
+        return Matrix("");
+    }
+
+    std::vector<std::vector<int>> resultMatrix(rows, std::vector<int>(cols, 0));
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            resultMatrix[i][j] = matrix[i][j] + otherMatrix.matrix[i][j];
+        }
+    }
+
+    return Matrix(matrixToString());
+}
+
+Matrix Matrix::subtract(const Matrix& otherMatrix) {
+    if (!checkCompatibility(otherMatrix)) {
+        not_a_matrix = true;
+        return Matrix("");
+    }
+
+    std::vector<std::vector<int>> resultMatrix(rows, std::vector<int>(cols, 0));
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            resultMatrix[i][j] = matrix[i][j] - otherMatrix.matrix[i][j];
+        }
+    }
+
+    return Matrix(matrixToString());
+}
+
+Matrix Matrix::multiply(const Matrix& otherMatrix) {
+    if (cols != otherMatrix.rows) {
+        not_a_matrix = true;
+        return Matrix("");
+    }
+
+    std::vector<std::vector<int>> resultMatrix(rows, std::vector<int>(otherMatrix.cols, 0));
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < otherMatrix.cols; ++j) {
+            for (int k = 0; k < cols; ++k) {
+                resultMatrix[i][j] += matrix[i][k] * otherMatrix.matrix[k][j];
+            }
+        }
+    }
+
+    return Matrix(matrixToString());
+}
+
+std::string Matrix::matrixToString() const {
+    std::stringstream ss;
+
+    for (const auto& row : matrix) {
+        for (int num : row) {
+            ss << num << " ";
+        }
+        ss << std::endl;
+    }
+
+    return ss.str();
+}
+
+void Matrix::display() const {
+    if (not_a_matrix) {
+        std::cout << "Not a valid matrix." << std::endl;
+    } else {
+        std::cout << "Matrix:" << std::endl;
+        std::cout << matrixToString() << std::endl;
+    }
+}
+
+int main() {
+    std::string matrix_str1 = "(1,2,3),(4,5,6),(7,8,9)";
+    std::string matrix_str2 = "(9,8,7),(6,5,4),(3,2,1)";
+
+    Matrix matrix1(matrix_str1);
+    Matrix matrix2(matrix_str2);
+
+    matrix1.display();
+    matrix2.display();
+
+    Matrix result_addition = matrix1.add(matrix2);
+    result_addition.display();
+
+    Matrix result_subtraction = matrix1.subtract(matrix2);
+    result_subtraction.display();
+
+    Matrix result_multiplication = matrix1.multiply(matrix2);
+    result_multiplication.display();
+
+    return 0;
+}
