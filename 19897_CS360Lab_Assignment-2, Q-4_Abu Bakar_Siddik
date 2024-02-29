@@ -1,0 +1,84 @@
+Q4. Create a class called MusicIns to contain three methods void string(void), void wind(void) and void perc(void). Each of these methods should initialize a member string type instrument array to contain the following
+
+a. Veena, guitar, sitar, sarod and mandolin under void string(void) method
+b. Flute, clarinet, saxophone, nadaswaram and piccolo under void wind(void) method
+c. Table, mridangam, bongos, drums and tambour under void perc(void) method.
+ It should also have two methods called void get(void) and void show(void) to display the contents of the arrays initialized. The void get(void) methods must display a menu as follows
+
+a. The values of instrument array within void string(void) method
+b. The values of instrument array within void wind(void) method
+c. The values of instrument array within void perc(void) method After that, generate test program main.cpp to verify the above class
+
+
+
+Ans: 
+#include <iostream>
+#include <string>
+using namespace std;
+
+class MusicIns {
+private:
+    string instruments[5]; 
+    int type; 
+
+public:
+    void stringInstruments() {
+        const string names[] = {"Veena", "Guitar", "Sitar", "Sarod", "Mandolin"};
+        for (int i = 0; i < 5; ++i) {
+            instruments[i] = names[i];
+        }
+        type = 1; 
+    }
+
+    void windInstruments() {
+        const string names[] = {"Flute", "Clarinet", "Saxophone", "Nadaswaram", "Piccolo"};
+        for (int i = 0; i < 5; ++i) {
+            instruments[i] = names[i];
+        }
+        type = 2; 
+    }
+
+    void percInstruments() {
+        const string names[] = {"Tabla", "Mridangam", "Bongos", "Drums", "Tambour"};
+        for (int i = 0; i < 5; ++i) {
+            instruments[i] = names[i];
+        }
+        type = 3; 
+    }
+
+    void get() {
+        cout << "Select the type of instruments to display:\n";
+        cout << "1. String Instruments\n";
+        cout << "2. Wind Instruments\n";
+        cout << "3. Percussion Instruments\n";
+        cout << "Enter your choice: ";
+        int choice;
+        cin >> choice;
+        switch (choice) {
+            case 1: stringInstruments(); break;
+            case 2: windInstruments(); break;
+            case 3: percInstruments(); break;
+            default: cout << "Invalid choice" << endl;
+        }
+    }
+
+    void show() {
+        cout << "Instruments: ";
+        if (type == 1) cout << "[String]";
+        else if (type == 2) cout << "[Wind]";
+        else if (type == 3) cout << "[Percussion]";
+        cout << endl;
+
+        for (int i = 0; i < 5; ++i) {
+            cout << instruments[i] << endl;
+        }
+    }
+};
+
+int main() {
+    MusicIns instruments;
+    instruments.get();
+    instruments.show();
+
+    return 0;
+}
