@@ -1,0 +1,159 @@
+Q2. Write the program based on the following requirements:-
+a. Define a class called student that has the following data members:
+ 	i. int student number
+ 	ii. string student name
+ 	iii. double student average
+b. The following member functions:
+ 	i. Constructor that initialize the data members with default values.
+ 	ii. set and get functions for each data member
+ 	iii. Print function to print the values of data members.
+c. Define a class called graduatestudent that inherits data members and functions from the class student, and then declare the following data members :
+ 	i. int level
+ 	ii. int year
+d. Member functions:
+ 	i. constructor
+ 	ii. set and get functions for each data member
+ 	iii. Print function.
+e. Define a class called master that inherits data members and functions from
+graduatestudent class, and then declare the following data member:
+ 	i. int newid
+ 	f. Member function:
+ 	i. constructor
+ 	ii. set and get function for the data member
+ 	iii. Print function
+g. Write a driver program(i.e. main function) that:
+ 	i. Declare object of type student with suitable values then print it
+ 	ii. Declare object of type master with your information then print it.
+
+
+
+Ans: 
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Base class
+class Student {
+protected:
+    int studentNumber;
+    string studentName;
+    double studentAverage;
+
+public:
+    // Constructor
+    Student() : studentNumber(0), studentName("Unknown"), studentAverage(0.0) {}
+
+    // Set functions
+    void setStudentNumber(int number) {
+        studentNumber = number;
+    }
+
+    void setStudentName(string name) {
+        studentName = name;
+    }
+
+    void setStudentAverage(double average) {
+        studentAverage = average;
+    }
+
+    // Get functions
+    int getStudentNumber() const {
+        return studentNumber;
+    }
+
+    string getStudentName() const {
+        return studentName;
+    }
+
+    double getStudentAverage() const {
+        return studentAverage;
+    }
+
+    // Print function
+    void print() const {
+        cout << "Student Number: " << studentNumber << ", Name: " << studentName << ", Average: " << studentAverage << endl;
+    }
+};
+
+// Derived class from Student
+class GraduateStudent : public Student {
+protected:
+    int level;
+    int year;
+
+public:
+    // Constructor
+    GraduateStudent() : Student(), level(0), year(0) {}
+
+    // Set functions
+    void setLevel(int lvl) {
+        level = lvl;
+    }
+
+    void setYear(int yr) {
+        year = yr;
+    }
+
+    // Get functions
+    int getLevel() const {
+        return level;
+    }
+
+    int getYear() const {
+        return year;
+    }
+
+    // Print function
+    void print() const {
+        Student::print(); // Call base class print function
+        cout << "Level: " << level << ", Year: " << year << endl;
+    }
+};
+
+// Derived class from GraduateStudent
+class Master : public GraduateStudent {
+private:
+    int newid;
+
+public:
+    // Constructor
+    Master() : GraduateStudent(), newid(0) {}
+
+    // Set and get functions
+    void setNewId(int id) {
+        newid = id;
+    }
+
+    int getNewId() const {
+        return newid;
+    }
+
+    // Print function
+    void print() const {
+        GraduateStudent::print(); // Call base class print function
+        cout << "New ID: " << newid << endl;
+    }
+};
+
+// Main function
+int main() {
+    // Declare object of type Student with suitable values then print it
+    Student student;
+    student.setStudentNumber(123);
+    student.setStudentName("John Doe");
+    student.setStudentAverage(89.5);
+    student.print();
+
+    // Declare object of type Master with your information then print it
+    Master master;
+    master.setStudentNumber(456);
+    master.setStudentName("Jane Smith");
+    master.setStudentAverage(92.3);
+    master.setLevel(2);
+    master.setYear(2022);
+    master.setNewId(789);
+    master.print();
+
+    return 0;
+}
