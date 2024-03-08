@@ -1,0 +1,143 @@
+Q1. Analyze the following program and explain each statement and commented-down statements in red. Finally, run the program and type in appropriate inputs from standard input device to show the running results.
+
+
+
+
+Ans: 
+#include <iostream>
+using namespace std;
+
+class A {
+public:
+    A(); // Default constructor: Initializes x to 0 and prints a message indicating it's called.
+    A(int); // Parameterized constructor: Initializes x with a given integer and prints a message.
+    A(const A&); // Copy constructor: Initializes a new object as a copy of an existing object, setting x to the same value, and prints a message.
+    
+    ~A(); // Destructor: Prints a message when an object of class A is destroyed, useful for tracking the object's lifecycle.
+    
+    void operator=(const A& rhs); // Assignment operator: Assigns the value of rhs.x to this object's x and prints a message. This method is called when an object is assigned the value of another object.
+    
+    void Print(); // Non-const method to print the value of x. This method can modify object state (though it does not in this implementation).
+    void PrintC() const; // Const method to print the value of x. Being const, it guarantees not to modify the object state.
+    
+    int x; // Integer data member representing some value of interest.
+    
+    int& X() { return x; } // Returns a reference to x, allowing for direct modification outside the class scope.
+};
+
+// Definitions follow:
+
+A::A()
+: x(0) {
+    cout << "Hello from A::A() Default constructor" << endl;
+}
+
+A::A(int i)
+: x(i) {
+    cout << "Hello from A::A(int) constructor" << endl;
+}
+
+A::A(const A& a)
+: x(a.x) {
+    cout << "Hello from A::A(const A&) constructor" << endl;
+}
+
+A::~A() {
+    cout << "Hello from A::A destructor" << endl;
+}
+
+void A::operator=(const A& rhs) {
+    x = rhs.x;
+    cout << "Hello from A::operator=" << endl;
+}
+
+void A::Print() {
+    cout << "A::Print(), x " << x << endl;
+}
+
+void A::PrintC() const {
+    cout << "A::PrintC(), x " << x << endl;
+}
+
+// Functions to demonstrate passing objects to and from functions:
+
+void PassAByValue(A a) { // Demonstrates passing by value. `a` is a copy of the original object; modifications don't affect the original.
+    cout << "PassAByValue, a.x " << a.x << endl;
+    a.x++;
+    a.Print();
+    a.PrintC();
+}
+
+void PassAByReference(A& a) { // Demonstrates passing by reference. Changes to `a` will affect the original object.
+    cout << "PassAByReference, a.x " << a.x << endl;
+    a.x++;
+    a.Print();
+    a.PrintC();
+}
+
+void PassAByConstReference(const A& a) { // Demonstrates passing by const reference. `a` cannot be modified.
+    cout << "PassAByReference, a.x " << a.x << endl;
+    a.PrintC(); // This works because PrintC() is a const method.
+    // a.Print(); // Uncommenting this would cause a compiler error because Print() is not a const method.
+}
+
+void PassAByPointer(A* a) { // Demonstrates passing by pointer. Like reference, changes to `*a` affect the original object.
+    cout << "PassAByPointer, a->x " << a->x << endl;
+    a->x++;
+    a->Print();
+    a->PrintC();
+}
+
+int main() {
+    // Interactive part to observe constructor, destructor, and assignment operator calls:
+    cout << "Creating a0"; getchar();
+    A a0;
+    
+    cout << "Creating a1"; getchar();
+    A a1(1);
+    
+    cout << "Creating a2"; getchar();
+    A a2(a0);
+    
+    cout << "Creating a3"; getchar();
+    A a3 = a0;
+    
+    cout << "Assigning a3 = a1"; getchar();
+    a3 = a1; // Assignment
+    
+    // Demonstrations of passing objects to functions in various ways:
+    cout << "PassAByValue(a1)"; getchar();
+    PassAByValue(a1); // Shows copying by value
+    
+    cout << "After PassAByValue(a1)" << endl;
+    a1.Print(); // a1 remains unchanged after PassAByValue
+    
+    cout << "PassAByReference(a1)"; getchar();
+    PassAByReference(a1); // a1 will be modified
+    
+    cout << "After PassAByReference(a1)" << endl;
+    a1.Print(); // a1 shows changes
+    
+    cout << "PassAByConst(a1)"; getchar();
+    PassAByConstReference(a1); // a1 is accessed but not modified
+    
+    cout << "After PassAByConstReference(a1)" << endl;
+    a1.Print(); // a1 remains unchanged
+    
+    cout << "PassAByPointer(&a1)"; getchar();
+    PassAByPointer(&a1); // a1 will be modified through pointer access
+    
+    cout << "After PassAByPointer(a1)" << endl;
+    a1.Print(); 
+    
+    cout << "a1.X() = 10"; getchar();
+    a1.X() = 10; // Directly modify x through reference returned by X()
+    a1.Print();
+    
+    // The statement below demonstrates the ability of C++ to implicitly convert an int to an A object
+    // through the A(int) constructor, creating a temporary A object, then passing it by const reference.
+    cout << "PassAByConstReference"; getchar();
+    PassAByConstReference(20); // This works due to implicit conversion from int to A using A(int).
+    
+    return 0;
+}
