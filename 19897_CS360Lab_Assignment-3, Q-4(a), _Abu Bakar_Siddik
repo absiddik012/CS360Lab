@@ -1,0 +1,66 @@
+Q4. Answer the questions after going through the following class:
+class Test{
+char paper[20];
+int marks;
+public:
+Test () // Function 1
+{
+strcpy (paper, "Computer");
+marks = 0;
+}
+Test (char p[]) // Function 2
+{
+strcpy(paper, p);
+marks = 0;
+}
+Test (int m) // Function 3
+{
+strcpy(paper,"Computer");
+marks = m;
+}
+Test (char p[], int m) // Function 4
+{
+strcpy (paper, p);
+marks = m;
+}
+};
+
+a) Write statements in C++ that would execute Function 1, Function 2,
+Function 3 and Function 4 of class Test.
+
+
+
+
+a)Ans:
+#include <cstring> // For strcpy
+
+class Test {
+    char paper[20];
+    int marks;
+public:
+    Test() { // Function 1
+        strcpy(paper, "Computer");
+        marks = 0;
+    }
+    Test(char p[]) { // Function 2
+        strcpy(paper, p);
+        marks = 0;
+    }
+    Test(int m) { // Function 3
+        strcpy(paper, "Computer");
+        marks = m;
+    }
+    Test(char p[], int m) { // Function 4
+        strcpy(paper, p);
+        marks = m;
+    }
+};
+
+int main() {
+    Test t1; // Execute Function 1: Default constructor
+    char subject[] = "Mathematics";
+    Test t2(subject); // Execute Function 2: Constructor with char array
+    Test t3(85); // Execute Function 3: Constructor with int
+    Test t4(subject, 90); // Execute Function 4: Constructor with char array and int
+    return 0;
+}
