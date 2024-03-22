@@ -1,0 +1,68 @@
+Q1. Correct the errors in the following snippets and explain: - 
+
+
+a) Assume the following prototype is declared in class Time:
+ 	void ~Time( int );
+Ans: 
+~Time(); 		// Corrected one
+The original snippet attempted to declare a destructor with a return type and a parameter, which is incorrect. Destructors in C++ do not take parameters and do not return a value. Also, destructors are named with a tilde ~ followed by the class name, and they do not have a return type specified.
+
+
+
+b) Assume the following prototype is declared in class Employee:
+ 	int Employee( string, string );
+Ans:
+	Employee(std::string, std::string);  		//Corrected one
+Constructors in C++ have the same name as the class and do not specify a return type, not even void. The original snippet seems to attempt to declare a constructor but includes a return type (int), which is incorrect.
+
+
+
+c) The following is a definition of class Example:
+class Example{
+public:
+Example( int y = 10 ): data( y ){
+// empty body
+} // end Example constructor
+int getIncrementedData() const{
+return ++data;
+} // end function getIncrementedData
+static int getCount(){
+cout << "Data is " << data << endl;
+return count;
+} // end function getCount
+private:
+int data;
+static int count;
+}; // end class Example
+
+Ans:
+#include <iostream>
+
+class Example{
+public:
+    // Constructor with a default parameter value
+    Example(int y = 10): data(y) {
+        // Constructor body is empty
+    }
+
+    // Const function that returns data incremented by 1 without modifying it
+    int getIncrementedData() const {
+        return data + 1;
+    }
+
+    // Static function that only returns the static member 'count'
+    static int getCount() {
+        // Static functions can access only static members
+        // std::cout << "Data is " << data << endl; // Removed because 'data' is non-static
+        return count;
+    }
+
+private:
+    int data;            // Non-static data member
+    static int count;    // Static data member
+}; // end class Example
+
+// Define and initialize the static member 'count'
+int Example::count = 0;
+
+Here, The getIncrementedData method now correctly returns data + 1, adhering to const correctness by not modifying the object's state. The getCount method is left as-is but without the attempt to print data, focusing on returning the static count member. This avoids errors related to accessing instance-specific data in a static context. I added the definition and initialization of the static member count outside the class definition. This is necessary for static members in C++. Included necessary headers (<iostream>) at the top for completeness, although if the std::cout statement is removed or not used, <iostream> might not be strictly necessary.
