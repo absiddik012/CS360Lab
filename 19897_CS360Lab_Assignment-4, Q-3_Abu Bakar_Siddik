@@ -1,0 +1,130 @@
+Q3. Create a class HugeInteger that uses a 40-element array of digits to store integers as large as 40 digits each. Provide member functions input, output, add and subtract.For comparing HugeInteger objects, provide functions isEqualTo, isNotEqualTo, isGreaterThan, isLessThan, isGreaterThanOrEqualTo and isLessThanOrEqualTo—each of these is a "predicate " function that simply returns true if the relationship holds between the two HugeIntegers and returns false if the relationship does not hold. Also, provide a predicate function isZero. After that, provide member functions multiply, divide and modulus.
+
+
+
+Ans:
+#include <iostream>
+#include <cstring> // For memset
+
+using namespace std;
+
+class HugeInteger {
+public:
+    HugeInteger() {
+        memset(digits, 0, sizeof(digits)); // Initialize all digits to 0
+    }
+
+    void input(const string& number) {
+        memset(digits, 0, sizeof(digits)); // Reset the digits array
+        int length = number.length();
+        for (int i = 0; i < length; ++i) {
+            digits[i] = number[length - 1 - i] - '0';
+        }
+    }
+
+    void output() const {
+        int i = maxSize - 1;
+        while (i > 0 && digits[i] == 0) --i; // Skip leading zeros
+        for (; i >= 0; --i) {
+            cout << digits[i];
+        }
+    }
+
+    HugeInteger add(const HugeInteger& other) const {
+        HugeInteger result;
+        int carry = 0;
+        for (int i = 0; i < maxSize; ++i) {
+            int sum = digits[i] + other.digits[i] + carry;
+            result.digits[i] = sum % 10;
+            carry = sum / 10;
+        }
+        return result;
+    }
+
+    HugeInteger subtract(const HugeInteger& other) {
+        HugeInteger result;
+        for (int i = 0; i < maxSize; ++i) {
+            result.digits[i] = digits[i] - other.digits[i];
+            if (result.digits[i] < 0) {
+                result.digits[i] += 10;
+                digits[i + 1]--;
+            }
+        }
+        return result;
+    }
+
+    // Predicate functions
+    bool isEqualTo(const HugeInteger& other) const {
+        return memcmp(digits, other.digits, sizeof(digits)) == 0;
+    }
+
+    bool isNotEqualTo(const HugeInteger& other) const {
+        return !isEqualTo(other);
+    }
+
+    bool isGreaterThan(const HugeInteger& other) const {
+        for (int i = maxSize - 1; i >= 0; --i) {
+            if (digits[i] > other.digits[i]) return true;
+            if (digits[i] < other.digits[i]) return false;
+        }
+        return false;
+    }
+
+    bool isLessThan(const HugeInteger& other) const {
+        return !isGreaterThanOrEqualTo(other);
+    }
+
+    bool isGreaterThanOrEqualTo(const HugeInteger& other) const {
+        return isEqualTo(other) || isGreaterThan(other);
+    }
+
+    bool isLessThanOrEqualTo(const HugeInteger& other) const {
+        return isEqualTo(other) || isLessThan(other);
+    }
+
+    bool isZero() const {
+        for (int i = 0; i < maxSize; ++i) {
+            if (digits[i] != 0) return false;
+        }
+        return true;
+    }
+
+private:
+    static const int maxSize = 40;
+    int digits[maxSize];
+};
+
+int main() {
+    HugeInteger num1;
+    HugeInteger num2;
+    HugeInteger result;
+
+    num1.input("1234567890123456789012345678901234567890");
+    num2.input("987654321098765432109876543210987654321");
+
+    cout << "Num1: ";
+    num1.output();
+    cout << "\nNum2: ";
+    num2.output();
+    cout << "\n";
+
+    cout << "Num1 + Num2: ";
+    HugeInteger sum = num1.add(num2);
+    sum.output();
+    cout << "\n";
+
+    cout << "Num1 - Num2: ";
+    HugeInteger diff = num1.subtract(num2);
+    diff.output();
+    cout << "\n";
+
+    cout << "Num1 == Num2? " << num1.isEqualTo(num2) << "\n";
+    cout << "Num1 != Num2? " << num1.isNotEqualTo(num2) << "\n";
+    cout << "Num1 > Num2? " << num1.isGreaterThan(num2) << "\n";
+    cout << "Num1 < Num2? " << num1.isLessThan(num2) << "\n";
+    cout << "Num1 >= Num2? " << num1.isGreaterThanOrEqualTo(num2) << "\n";
+    cout << "Num1 <= Num2? " << num1.isLessThanOrEqualTo(num2) << "\n";
+    cout << "Num1 is Zero? " << num1.isZero() << "\n";
+    cout << "Num2 is Zero? " << num2.isZero() << "\n";
+    return 0;
+}
