@@ -1,0 +1,43 @@
+Q3. Create a class Tensor with a method sort to sort a vector input argument and print it out. Please verify this correctness in main function.
+
+
+
+
+Ans:
+#include <iostream>
+#include <vector>
+#include <algorithm> 
+
+using namespace std;
+
+class Tensor {
+public:
+    void sort(vector<int>& input) {
+        std::sort(input.begin(), input.end());
+        print(input);
+    }
+
+private:
+    void print(const vector<int>& input) {
+        for (int i : input) {
+            cout << i << " ";
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    Tensor tensor;
+    vector<int> input = {5, 1, 4, 2, 8};
+
+    cout << "Original vector: ";
+    for (int i : input) {
+        cout << i << " ";
+    }
+    cout << endl;
+
+    cout << "Sorted vector: ";
+    tensor.sort(input);
+
+    return 0;
+}
