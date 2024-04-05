@@ -1,0 +1,72 @@
+Q4. Find the errors in the following class and explain how to correct them. Please test it in
+main function
+ 	class Example{
+ 	public:
+ 		Example( int y = 10 ): data( y ){
+ 	// empty body
+ 	} // end Example constructor
+ 	int getIncrementedData() const{
+ 		return data++;
+ 	} // end function getIncrementedData
+ 	static int getCount(){
+ 		cout << "Data is " << data << endl;
+return count;
+} // end function getCount
+private:
+ 	int data;
+ 	static int count;
+}; // end class Example
+
+
+
+
+Ans:
+The Example class contains several errors that need to be addressed:
+Modification of Data in a const Method: The method getIncrementedData attempts to modify the class member data within a const-qualified method. This is not allowed because const methods are not to change.
+Accessing Non-static Member from a Static Method: The getCount static method attempts to access the non-static member data, which is also not allowed because static methods do not have access to any instance of the class.
+Uninitialized Static Member count: The static member variable count is used but never defined or initialized outside the class definition.
+
+
+
+To correct these errors:
+Make getIncrementedData Non-const or Use a Different Approach: Since getIncrementedData intends to modify data, it should not be a const method. If the intention is to get incremented data without modifying the original data, consider returning data + 1 instead.
+Remove Access to Non-static Members from Static Methods: If we need to access data within getCount, we might reconsider the design. Since data is specific to an instance, it doesn't make sense to access it from a static context, which is independent of any instance. 
+Define and Initialize the Static Member count: Static members must be defined outside the class definition, usually in the implementation file (.cpp).
+
+
+
+Corrected code would be:
+#include <iostream>
+
+using namespace std;
+
+class Example {
+public:
+    Example(int y = 10) : data(y) {
+        count++;
+    }
+
+    int getIncrementedData() const {
+        return data + 1;
+    }
+    static int getCount() {
+        cout << "Count is " << count << endl;
+        return count;
+    }
+
+private:
+    int data;
+    static int count;
+};
+
+// Define and initialize static member count
+int Example::count = 0;
+
+int main() {
+    Example example1(5), example2;
+    cout << "Incremented data for example1: " << example1.getIncrementedData() << endl;
+    cout << "Incremented data for example2: " << example2.getIncrementedData() << endl;
+    Example::getCount();
+    
+    return 0;
+}
