@@ -1,0 +1,47 @@
+Q1. Write a function that takes a vector of integers as argument and reverses its elements.
+void rvrs(Vector<int>& vct){
+//Complete your program
+}
+
+
+
+Ans:
+#include <iostream>
+#include <vector>
+#include <algorithm> 
+
+using std::vector;
+using std::cout;
+using std::endl;
+
+void rvrs(vector<int>& vct) {
+    int start = 0;
+    int end = vct.size() - 1;
+
+    while (start < end) {
+        std::swap(vct[start], vct[end]);
+        start++;
+        end--;
+    }
+}
+
+int main() {
+    vector<int> myVector = {1, 2, 3, 4, 5};
+    // Printing the original function
+    cout << "Original vector: ";
+    for (int elem : myVector) {
+        cout << elem << " ";
+    }
+    cout << endl;
+    
+    // Calling the reverse function
+    rvrs(myVector);
+    // Printing the reversed vector
+    cout << "Reversed vector: ";
+    for (int elem : myVector) {
+        cout << elem << " ";
+    }
+    cout << endl;
+    
+    return 0;
+}
