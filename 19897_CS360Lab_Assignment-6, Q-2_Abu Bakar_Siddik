@@ -1,0 +1,391 @@
+Q2. A machine with 32-bit integers can represent integers in the range of approximately -2 billion to +2 billion. This fixed-size restriction is rarely troublesome, but there are applications in which we would like to be able to use a much wider range of integers. This is what C++ was built to do, namely, create powerful new data types. Consider class HugeInt in the following program. Study the class carefully, then answer the following:
+
+a. Describe precisely how it operates.
+b. What restrictions does the class have?
+c. Overload the * multiplication operator.
+d. Overload the / division operator.
+e. Overload all the relational and equality operators.
+
+[Note: We do not show an assignment operator or copy constructor for class HugeInt, because the assignment operator and copy constructor provided by the compiler are capable of copying the entire array data member properly.]
+
+
+// Hugeint.h
+// HugeInt class definition.
+#ifndef HUGEINT_H
+#define HUGEINT_H
+#include <array>
+#include <iostream>
+#include <string>
+class HugeInt{
+friend std::ostream &operator<<( std::ostream &, const HugeInt & );
+public:
+static const int digits = 30; // maximum digits in a HugeInt
+HugeInt( long = 0 ); // conversion/default constructor
+HugeInt( const std::string & ); // conversion constructor
+// addition operator; HugeInt + HugeInt
+HugeInt operator+( const HugeInt & ) const;
+// addition operator; HugeInt + int
+HugeInt operator+( int ) const;
+// addition operator;
+// HugeInt + string that represents large integer value
+HugeInt operator+( const std::string & ) const;
+private:
+std::array< short, digits > integer;
+}; // end class HugetInt
+#endif
+// Hugeint.cpp
+// HugeInt member-function and friend-function definitions.
+#include <cctype> // isdigit function prototype
+#include "Hugeint.h" // HugeInt class definition
+using namespace std;
+// default constructor; conversion constructor that converts
+// a long integer into a HugeInt object
+HugeInt::HugeInt( long value ){
+// initialize array to zero
+for ( short &element : integer )
+element = 0;
+// place digits of argument into array
+for ( size_t j = digits - 1; value != 0 && j >= 0; j-- ){
+integer[ j ] = value % 10;
+value /= 10;
+} // end for
+} // end HugeInt default/conversion constructor
+//conversion constructor that converts a character string
+//representing a large integer into a HugeInt object
+HugeInt::HugeInt( const string &number ){
+//initialize array to zero
+for ( short &element : integer )
+element = 0;
+//place digits of argument into array
+size_t length = number.size();
+for ( size_t j = digits - length, k = 0; j < digits; ++j, ++k )
+if( isdigit( number[ k ] ) ) // ensure that character is a digit
+integer[ j ] = number[ k ] - '0';
+}// end HugeInt conversion constructor
+//addition operator; HugeInt + HugeInt
+HugeInt HugeInt::operator+( const HugeInt &op2 ) const{
+HugeInt temp; // temporary result
+int carry = 0;
+for ( int i = digits - 1; i >= 0; i-- ){
+temp.integer[ i ] = integer[ i ] + op2.integer[ i ] + carry;
+// determine whether to carry a 1
+if ( temp.integer[ i ] > 9 ){
+temp.integer[ i ] %= 10; // reduce to 0-9
+carry = 1;
+} // end if
+else // no carry
+carry = 0;
+} // end for
+return temp; // return copy of temporary object
+} // end function operator+
+// addition operator; HugeInt + int
+HugeInt HugeInt::operator+( int op2 ) const
+{
+// convert op2 to a HugeInt, then invoke
+// operator+ for two HugeInt objects
+return *this + HugeInt( op2 );
+} // end function operator+
+// addition operator;
+// HugeInt + string that represents large integer value
+HugeInt HugeInt::operator+( const string &op2 ) const{
+// convert op2 to a HugeInt, then invoke
+// operator+ for two HugeInt objects
+return *this + HugeInt( op2 );
+} // end operator+
+// overloaded output operator
+ostream& operator<<( ostream &output, const HugeInt &num ){
+int i;
+for ( i = 0; ( i < HugeInt::digits ) && ( 0 == num.integer[ i ] ); ++i )
+; // skip leading zeros
+if ( i == HugeInt::digits )
+output << 0;
+else
+for ( ; i < HugeInt::digits; ++i )
+output << num.integer[ i ];
+return output;
+} // end function operator<<
+// main.cpp
+// HugeInt test program.
+#include <iostream>
+#include "Hugeint.h"
+using namespace std;
+int main(void){
+HugeInt n1( 7654321 );
+HugeInt n2( 7891234 );
+HugeInt n3( "99999999999999999999999999999" );
+HugeInt n4( "1" );
+HugeInt n5;
+cout << "n1 is " << n1 << "\nn2 is " << n2
+<< "\nn3 is " << n3 << "\nn4 is " << n4
+<< "\nn5 is " << n5 << "\n\n";
+n5 = n1 + n2;
+cout << n1 << " + " << n2 << " = " << n5 << "\n\n";
+cout << n3 << " + " << n4 << "\n= " << ( n3 + n4 ) << "\n\n";
+n5 = n1 + 9;
+cout << n1 << " + " << 9 << " = " << n5 << "\n\n";
+n5 = n2 + "10000";
+cout << n2 << " + " << "10000" << " = " << n5 << endl;
+} // end main
+
+
+
+
+
+Ans:
+
+(a) Description of the HugeInt Class Operation:
+The HugeInt class is designed to handle very large integers by representing them as an array of digits. Each digit is stored in a fixed-size array (with a maximum of 30 digits) where each array element represents a single digit of the integer, and the digits are stored in reverse order (least significant digit at the highest index). Here's a breakdown of its functionality:
+•	Constructors: The class provides constructors for initializing a HugeInt object from a long, from a string, or by default, initializing to zero.
+•	Addition Operators: There are several overloaded addition operators for adding two HugeInt objects, a HugeInt and an int, and a HugeInt and a string that represents a large integer. These operators utilize the primary addition logic to handle carrying over digits appropriately.
+•	Output Operator: The output stream operator (<<) is overloaded to enable the straightforward printing of HugeInt objects. It skips leading zeros and prints the digits from the most significant to the least significant.
+
+
+(b) Restrictions of the HugeInt Class:
+
+•	Fixed Size: The most significant restriction is the fixed size (30 digits). If a number exceeds this size, it cannot be correctly represented or processed.
+•	No Error Handling: The class does not handle errors related to overflow (beyond 30 digits) or invalid input (non-numeric characters in the string constructor).
+•	Limited to Basic Operations: Currently, the class only supports addition. It does not include subtraction, multiplication, division, or other mathematical operations.
+•	Digit Overflow Handling: During addition, if the sum of corresponding digits (plus any carry) exceeds 9, it carries over to the next significant position. If this occurs at the most significant digit, it could lead to incorrect results due to the overflow not being handled beyond the array size.
+
+
+(c) Overloading the * Multiplication Operator:
+// Multiplication operator; HugeInt * HugeInt
+HugeInt HugeInt::operator*(const HugeInt& op2) const {
+    HugeInt temp;
+    for (int i = 0; i < digits; ++i) {
+        if (integer[i] == 0) continue;
+        int carry = 0;
+        for (int j = 0; j < digits - i; ++j) {
+            if (op2.integer[j] == 0) continue;
+            int product = integer[i] * op2.integer[j] + temp.integer[i + j] + carry;
+            temp.integer[i + j] = product % 10;
+            carry = product / 10;
+        }
+    }
+    return temp;
+}
+
+
+
+
+(d) Overloading the / Division Operator:
+// Division operator; HugeInt / int
+HugeInt HugeInt::operator/(int divisor) const {
+    HugeInt result;
+    int idx = 0;
+    int temp = integer[digits - 1];
+    while (temp < divisor && idx < digits - 1) {
+        temp = temp * 10 + integer[digits - 2 - idx++];
+    }
+    while (idx < digits) {
+        result.integer[digits - 1 - idx] = temp / divisor;
+        temp = (temp % divisor) * 10 + integer[digits - 2 - idx++];
+    }
+    return result;
+}
+
+
+
+(e) Overloading the Relational and Equality Operators:
+// Equality operator
+bool HugeInt::operator==(const HugeInt& rhs) const {
+    for (int i = 0; i < digits; ++i) {
+        if (integer[i] != rhs.integer[i])
+            return false;
+    }
+    return true;
+}
+
+
+
+
+
+@@ Overall Code after Overloading all the operators:
+
+
+#ifndef HUGEINT_H
+#define HUGEINT_H
+
+#include <array>
+#include <iostream>
+#include <string>
+
+class HugeInt {
+    friend std::ostream& operator<<(std::ostream&, const HugeInt&);
+    friend std::istream& operator>>(std::istream&, HugeInt&);
+
+public:
+    static const int digits = 30; // maximum digits in a HugeInt
+    HugeInt(long = 0); // conversion/default constructor
+    HugeInt(const std::string&); // conversion constructor from string
+
+    // Arithmetic operators
+    HugeInt operator+(const HugeInt&) const;
+    HugeInt operator+(int) const;
+    HugeInt operator+(const std::string&) const;
+    HugeInt operator*(const HugeInt&) const;
+    HugeInt operator/(int) const;
+
+    // Relational and equality operators
+    bool operator==(const HugeInt&) const;
+    bool operator!=(const HugeInt&) const;
+    bool operator<(const HugeInt&) const;
+    bool operator<=(const HugeInt&) const;
+    bool operator>(const HugeInt&) const;
+    bool operator>=(const HugeInt&) const;
+
+private:
+    std::array<short, digits> integer; // stores the digits of the number
+};
+
+#endif
+
+//#include "Hugeint.h"
+#include <cctype>
+#include <cmath>
+
+using namespace std;
+
+// Constructor from long
+HugeInt::HugeInt(long value) {
+    integer.fill(0);
+    for (int i = digits - 1; value != 0 && i >= 0; --i) {
+        integer[i] = value % 10;
+        value /= 10;
+    }
+}
+
+// Constructor from string
+HugeInt::HugeInt(const string& number) {
+    integer.fill(0);
+    int length = number.size();
+    for (int i = digits - length, j = 0; i < digits; ++i, ++j) {
+        if (isdigit(number[j]))
+            integer[i] = number[j] - '0';
+    }
+}
+
+// Addition operator: HugeInt + HugeInt
+HugeInt HugeInt::operator+(const HugeInt& op2) const {
+    HugeInt temp;
+    int carry = 0;
+    for (int i = digits - 1; i >= 0; --i) {
+        int sum = integer[i] + op2.integer[i] + carry;
+        temp.integer[i] = sum % 10;
+        carry = sum / 10;
+    }
+    return temp;
+}
+
+// Addition operator: HugeInt + int
+HugeInt HugeInt::operator+(int op2) const {
+    return *this + HugeInt(op2);
+}
+
+// Addition operator: HugeInt + string
+HugeInt HugeInt::operator+(const string& op2) const {
+    return *this + HugeInt(op2);
+}
+
+// Multiplication operator
+HugeInt HugeInt::operator*(const HugeInt& op2) const {
+    HugeInt result;
+    for (int i = 0; i < digits; ++i) {
+        if (integer[i] == 0) continue;
+        int carry = 0;
+        for (int j = 0, k = digits - 1 - i; j < digits - i; ++j, ++k) {
+            int product = integer[digits - 1 - i] * op2.integer[digits - 1 - j] + result.integer[k] + carry;
+            result.integer[k] = product % 10;
+            carry = product / 10;
+        }
+    }
+    return result;
+}
+
+// Division operator
+HugeInt HugeInt::operator/(int divisor) const {
+    HugeInt result;
+    int idx = 0;
+    int remainder = 0;
+    for (int i = 0; i < digits; ++i) {
+        int current = remainder * 10 + integer[i];
+        result.integer[i] = current / divisor;
+        remainder = current % divisor;
+    }
+    return result;
+}
+
+// Relational and equality operators
+bool HugeInt::operator==(const HugeInt& rhs) const {
+    return integer == rhs.integer;
+}
+
+bool HugeInt::operator!=(const HugeInt& rhs) const {
+    return !(*this == rhs);
+}
+
+bool HugeInt::operator<(const HugeInt& rhs) const {
+    return std::lexicographical_compare(integer.begin(), integer.end(), rhs.integer.begin(), rhs.integer.end());
+}
+
+bool HugeInt::operator<=(const HugeInt& rhs) const {
+    return *this < rhs || *this == rhs;
+}
+
+bool HugeInt::operator>(const HugeInt& rhs) const {
+    return !(*this <= rhs);
+}
+
+bool HugeInt::operator>=(const HugeInt& rhs) const {
+    return !(*this < rhs);
+}
+
+// Stream insertion operator
+ostream& operator<<(ostream& out, const HugeInt& num) {
+    int i = 0;
+    while (i < HugeInt::digits && num.integer[i] == 0) ++i;
+    if (i == HugeInt::digits)
+        out << 0;
+    else
+        for (; i < HugeInt::digits; ++i)
+            out << num.integer[i];
+    return out;
+}
+
+// Stream extraction operator
+istream& operator>>(istream& in, HugeInt& num) {
+    string input;
+    in >> input;
+    num = HugeInt(input);
+    return in;
+}
+
+#include <iostream>
+//#include "Hugeint.h"
+
+using namespace std;
+
+int main() {
+    HugeInt n1(7654321);
+    HugeInt n2(7891234);
+    HugeInt n3("99999999999999999999999999999");
+    HugeInt n4("1");
+    HugeInt result;
+
+    cout << "n1 is " << n1 << "\nn2 is " << n2
+         << "\nn3 is " << n3 << "\nn4 is " << n4 << "\n\n";
+
+    result = n1 + n2;
+    cout << n1 << " + " << n2 << " = " << result << "\n\n";
+
+    result = n3 + n4;
+    cout << n3 << " + " << n4 << " = " << result << "\n\n";
+
+    result = n1 * n2;
+    cout << n1 << " * " << n2 << " = " << result << "\n\n";
+
+    result = n3 / 2;
+    cout << n3 << " / " << "2" << " = " << result << "\n\n";
+
+    return 0;
+}
